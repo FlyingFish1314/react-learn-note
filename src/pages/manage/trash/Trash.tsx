@@ -12,6 +12,7 @@ import {
 import { useTitle } from 'ahooks'
 import styles from '../Common.module.scss'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import ListSearch from '@/components/listSearch/ListSearch'
 const { Title } = Typography
 const rawQuestionList = [
   {
@@ -121,7 +122,9 @@ const Trash: FC = () => {
         <div className={styles.left}>
           <Title level={3}>回收站</Title>
         </div>
-        <div className={styles.right}>(搜索)</div>
+        <div className={styles.right}>
+          <ListSearch></ListSearch>
+        </div>
       </div>
       <div className={styles.content}>
         {/* 问卷列表 */}
