@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
-
-const edit: FC = () => {
-  return <div>edit</div>
+import { useParams } from 'react-router-dom'
+const Edit: FC = () => {
+  const { id } = useParams()
+  return <div>edit{id}</div>
 }
 
-export default edit
+export default Edit

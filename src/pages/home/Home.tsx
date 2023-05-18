@@ -1,7 +1,18 @@
 import React, { FC } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 const Home: FC = () => {
-  return <div>home</div>
+  const nav = useNavigate()
+  function clickHandler() {
+    nav('/login')
+  }
+  return (
+    <div>
+      <p>home</p>
+      <div>
+        <button onClick={clickHandler}>登录</button>
+      </div>
+    </div>
+  )
 }
 
 export default Home
