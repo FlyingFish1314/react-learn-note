@@ -1,10 +1,22 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Typography } from 'antd'
 import styles from './Home.module.scss'
+import axios from 'axios'
+import '@/_mock/index.ts'
 const { Title, Paragraph } = Typography
 const Home: FC = () => {
   const nav = useNavigate()
+
+  useEffect(() => {
+    // fetch('/api/test')
+    //   .then((res) => res.json())
+    //   .then((data) => console.log('fetch', data))
+    // mock.js只能截止XMLHTPRequest，不能劫持feth
+    axios.get('/api/test').then((res: any) => {
+      console.log(res)
+    })
+  }, [])
   return (
     <div className={styles.container}>
       <div className={styles.info}>
