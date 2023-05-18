@@ -1,8 +1,11 @@
 import React, { FC, useState } from 'react'
 // import { useSearchParams } from 'react-router-dom'
+import { Typography } from 'antd'
 import { useTitle } from 'ahooks'
 import QuestionCard from '@/components/questionCard/QuestionCard'
-import styles from './List.module.scss'
+import styles from '../Common.module.scss'
+
+const { Title } = Typography
 const List: FC = () => {
   // const [searchParams] = useSearchParams()
   // console.log('keyword', searchParams.get('keyword'))
@@ -12,7 +15,7 @@ const List: FC = () => {
       _id: 'q1',
       title: '问卷1',
       isPublished: false,
-      isStart: false,
+      isStar: false,
       answerCount: 5,
       createdAt: '3月10日 13:23'
     },
@@ -20,7 +23,7 @@ const List: FC = () => {
       _id: 'q2',
       title: '问卷2',
       isPublished: true,
-      isStart: false,
+      isStar: true,
       answerCount: 5,
       createdAt: '3月10日 13:23'
     },
@@ -28,7 +31,7 @@ const List: FC = () => {
       _id: 'q3',
       title: '问卷3',
       isPublished: false,
-      isStart: false,
+      isStar: false,
       answerCount: 5,
       createdAt: '3月10日 13:23'
     },
@@ -36,7 +39,7 @@ const List: FC = () => {
       _id: 'q4',
       title: '问卷4',
       isPublished: true,
-      isStart: false,
+      isStar: true,
       answerCount: 5,
       createdAt: '3月10日 13:23'
     }
@@ -45,17 +48,19 @@ const List: FC = () => {
     <>
       <div className={styles.header}>
         <div className={styles.left}>
-          <h3>我的问卷</h3>
-          <div className={styles.right}>(搜索)</div>
+          <Title level={3}>我的问卷</Title>
         </div>
+        <div className={styles.right}>(搜索)</div>
       </div>
       <div className={styles.content}>
-        {questionList.map((q) => {
-          const { _id } = q
-          return <QuestionCard key={_id} {...q}></QuestionCard>
-        })}
+        {/* 问卷列表 */}
+        {questionList.length > 0 &&
+          questionList.map((q) => {
+            const { _id } = q
+            return <QuestionCard key={_id} {...q}></QuestionCard>
+          })}
       </div>
-      <div className={styles.footer}>footer</div>
+      <div className={styles.footer}>加载更多</div>
     </>
   )
 }
