@@ -6,7 +6,7 @@ const instance = axios.create({
 })
 
 // response 拦截：统一处理 errno 和 msg
-instance.interceptors.response.use((res) => {
+instance.interceptors.response.use((res: any) => {
   const resData = (res.data || {}) as ResType
   const { errno, data, msg } = resData
   console.log(
