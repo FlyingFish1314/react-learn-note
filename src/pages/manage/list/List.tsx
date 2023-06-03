@@ -1,50 +1,32 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 // import { useSearchParams } from 'react-router-dom'
-import { Typography } from 'antd'
-import { useTitle } from 'ahooks'
+import { Typography, Spin } from 'antd'
+import { useTitle, useRequest } from 'ahooks'
 import QuestionCard from '@/components/questionCard/QuestionCard'
 import styles from '../Common.module.scss'
 import ListSearch from '@/components/listSearch/ListSearch'
+import { getQuestionListService } from '@/service/question'
 
 const { Title } = Typography
 const List: FC = () => {
   // const [searchParams] = useSearchParams()
   // console.log('keyword', searchParams.get('keyword'))
   useTitle('小龙问卷-我的问卷')
-  const [questionList, setQuestionList] = useState([
-    {
-      _id: 'q1',
-      title: '问卷1',
-      isPublished: false,
-      isStar: false,
-      answerCount: 5,
-      createdAt: '3月10日 13:23'
-    },
-    {
-      _id: 'q2',
-      title: '问卷2',
-      isPublished: true,
-      isStar: true,
-      answerCount: 5,
-      createdAt: '3月10日 13:23'
-    },
-    {
-      _id: 'q3',
-      title: '问卷3',
-      isPublished: false,
-      isStar: false,
-      answerCount: 5,
-      createdAt: '3月10日 13:23'
-    },
-    {
-      _id: 'q4',
-      title: '问卷4',
-      isPublished: true,
-      isStar: true,
-      answerCount: 5,
-      createdAt: '3月10日 13:23'
-    }
-  ])
+
+  const { data = {}, loading } = useRequest(getQuestionListService)
+  const { list = [], total = 0 } = data
+  // const [list, setList] = useState([])
+  // const [total, setTotal] = useState(0)
+  // useEffect(() => {
+  //   async function load() {
+  //     const data = await getQuestionListService()
+  //     const { list = [], total = 0 } = data
+  //     setList(list)
+  //     setTotal(total)
+  //   }
+  //   load()
+  // }, [])
+
   return (
     <>
       <div className={styles.header}>
@@ -56,9 +38,15 @@ const List: FC = () => {
         </div>
       </div>
       <div className={styles.content}>
+        {loading && (
+          <div style={{ textAlign: 'center' }}>
+            <Spin></Spin>
+          </div>
+        )}
         {/* 问卷列表 */}
-        {questionList.length > 0 &&
-          questionList.map((q) => {
+        {!loading &&
+          list.length > 0 &&
+          list.map((q: any) => {
             const { _id } = q
             return <QuestionCard key={_id} {...q}></QuestionCard>
           })}
