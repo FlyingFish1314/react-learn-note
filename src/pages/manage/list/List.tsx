@@ -1,19 +1,18 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 // import { useSearchParams } from 'react-router-dom'
 import { Typography, Spin } from 'antd'
-import { useTitle, useRequest } from 'ahooks'
+import { useTitle } from 'ahooks'
 import QuestionCard from '@/components/questionCard/QuestionCard'
 import styles from '../Common.module.scss'
 import ListSearch from '@/components/listSearch/ListSearch'
-import { getQuestionListService } from '@/service/question'
-
+import useLoadQuestionListData from '@/hooks/useLoadQuestionListData'
 const { Title } = Typography
 const List: FC = () => {
   // const [searchParams] = useSearchParams()
   // console.log('keyword', searchParams.get('keyword'))
   useTitle('小龙问卷-我的问卷')
 
-  const { data = {}, loading } = useRequest(getQuestionListService)
+  const { data = {}, loading } = useLoadQuestionListData()
   const { list = [], total = 0 } = data
   // const [list, setList] = useState([])
   // const [total, setTotal] = useState(0)
