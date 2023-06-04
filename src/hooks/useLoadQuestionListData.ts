@@ -17,7 +17,7 @@ type OptionType = {
 function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
   const { isStar = false, isDeleted = false } = opt
   const [searchParams] = useSearchParams()
-  console.log('keyword', searchParams.get('keyword'))
+  // console.log('keyword', searchParams.get('keyword'))
   const { data, loading, error } = useRequest(
     async () => {
       const keyword = searchParams.get(LIST_SEARCH_PARAM_LEY) || ''
@@ -25,10 +25,6 @@ function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
       const pageSize =
         +(searchParams.get(LIST_PAGE_SIZE_PARAM_KEY) || '') ||
         LIST_PAGE_SIZE_DEFAULT
-      console.log(
-        '🚀 ~ file: useLoadQuestionListData.ts:26 ~ pageSize:',
-        pageSize
-      )
       const data = await getQuestionListService({
         keyword,
         isStar,

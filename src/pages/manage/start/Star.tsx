@@ -1,10 +1,11 @@
 import React, { FC, useState } from 'react'
 import { useTitle } from 'ahooks'
-import { Typography, Empty, Spin } from 'antd'
+import { Typography, Empty, Spin, Pagination } from 'antd'
 import QuestionCard from '@/components/questionCard/QuestionCard'
 import styles from '../Common.module.scss'
 import ListSearch from '@/components/listSearch/ListSearch'
 import useLoadQuestionListData from '@/hooks/useLoadQuestionListData'
+import ListPage from '@/components/listPage/ListPage'
 const { Title } = Typography
 
 const Star: FC = () => {
@@ -37,7 +38,9 @@ const Star: FC = () => {
             return <QuestionCard key={_id} {...q}></QuestionCard>
           })}
       </div>
-      <div className={styles.footer}>分页</div>
+      <div className={styles.footer}>
+        <ListPage total={total}></ListPage>
+      </div>
     </>
   )
 }

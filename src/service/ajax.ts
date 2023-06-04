@@ -9,10 +9,6 @@ const instance = axios.create({
 instance.interceptors.response.use((res: any) => {
   const resData = (res.data || {}) as ResType
   const { errno, data, msg } = resData
-  console.log(
-    '🚀 ~ file: ajax.ts:12 ~ instance.interceptors.response.use ~ data:',
-    data
-  )
 
   if (errno !== 0) {
     // 错误提示
