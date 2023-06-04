@@ -18,7 +18,7 @@ function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
   const { isStar = false, isDeleted = false } = opt
   const [searchParams] = useSearchParams()
   // console.log('keyword', searchParams.get('keyword'))
-  const { data, loading, error } = useRequest(
+  const { data, loading, error, refresh } = useRequest(
     async () => {
       const keyword = searchParams.get(LIST_SEARCH_PARAM_LEY) || ''
       const page = +(searchParams.get(LIST_PAGE_PARAM_KEY) || '') || 1
@@ -38,7 +38,7 @@ function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
       refreshDeps: [searchParams] //刷新依赖项
     }
   )
-  return { data, loading, error }
+  return { data, loading, error, refresh }
 }
 
 export default useLoadQuestionListData
