@@ -7,52 +7,22 @@ import {
   Space,
   Button,
   Modal,
-  message
+  message,
+  Spin
 } from 'antd'
 import { useTitle } from 'ahooks'
 import styles from '../Common.module.scss'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from '@/components/listSearch/ListSearch'
+import useLoadQuestionListData from '@/hooks/useLoadQuestionListData'
+
 const { Title } = Typography
-const rawQuestionList = [
-  {
-    _id: 'q1',
-    title: '问卷1',
-    isPublished: false,
-    isStar: false,
-    answerCount: 5,
-    createdAt: '3月10日 13:23'
-  },
-  {
-    _id: 'q2',
-    title: '问卷2',
-    isPublished: true,
-    isStar: true,
-    answerCount: 5,
-    createdAt: '3月10日 13:23'
-  },
-  {
-    _id: 'q3',
-    title: '问卷3',
-    isPublished: false,
-    isStar: false,
-    answerCount: 5,
-    createdAt: '3月10日 13:23'
-  },
-  {
-    _id: 'q4',
-    title: '问卷4',
-    isPublished: true,
-    isStar: true,
-    answerCount: 5,
-    createdAt: '3月10日 13:23'
-  }
-]
 const { confirm } = Modal
 
 const Trash: FC = () => {
   useTitle('小龙问卷-回收站')
-  const [questionList, setQuestionList] = useState(rawQuestionList)
+  const { data = {}, loading } = useLoadQuestionListData({ isDeleted: true })
+  const { list = [], total = 0 } = data
   // 记录选中的 id
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
@@ -103,7 +73,7 @@ const Trash: FC = () => {
         </Space>
       </div>
       <Table
-        dataSource={questionList}
+        dataSource={list}
         columns={tableColumns}
         rowKey={(q) => q._id}
         pagination={false}
@@ -127,9 +97,16 @@ const Trash: FC = () => {
         </div>
       </div>
       <div className={styles.content}>
+        {loading && (
+          <div style={{ textAlign: 'center' }}>
+            <Spin></Spin>
+          </div>
+        )}
         {/* 问卷列表 */}
-        {questionList.length === 0 && <Empty description="暂无数据"></Empty>}
-        {questionList.length > 0 && TableElem}
+        {!loading && list.length === 0 && (
+          <Empty description="暂无数据"></Empty>
+        )}
+        {list.length > 0 && TableElem}
       </div>
       <div className={styles.footer}>分页</div>
     </>
