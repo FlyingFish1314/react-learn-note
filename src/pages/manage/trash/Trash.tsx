@@ -15,6 +15,7 @@ import styles from '../Common.module.scss'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from '@/components/listSearch/ListSearch'
 import useLoadQuestionListData from '@/hooks/useLoadQuestionListData'
+import ListPage from '@/components/listPage/ListPage'
 
 const { Title } = Typography
 const { confirm } = Modal
@@ -108,7 +109,9 @@ const Trash: FC = () => {
         )}
         {list.length > 0 && TableElem}
       </div>
-      <div className={styles.footer}>分页</div>
+      <div className={styles.footer}>
+        <ListPage total={total}></ListPage>
+      </div>
     </>
   )
 }
