@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import styles from './QuestionCadr.module.scss'
 import { Space, Button, Tag, Divider, Popconfirm, Modal, message } from 'antd'
 import {
@@ -10,6 +10,12 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons'
 import { useNavigate, Link } from 'react-router-dom'
+import { useRequest } from 'ahooks'
+
+import {
+  updateQuestionService,
+  duplicateQuestionService
+} from '@/service/question'
 
 type PropsType = {
   _id: string
@@ -23,20 +29,59 @@ const { confirm } = Modal
 const QuestionCard: FC<PropsType> = (props: PropsType) => {
   const { _id, title, createdAt, answerCount, isPublished, isStar } = props
   const nav = useNavigate()
-  function duplicate() {
-    console.log('copy')
-    message.success('复制成功')
-  }
 
+  //复制
+  const { loading: duplicateLoading, run: duplicate } = useRequest(
+    async () => await duplicateQuestionService(_id),
+    {
+      manual: true,
+      onSuccess(result) {
+        message.success('复制成功')
+        nav(`/question/edit/${result.id}`) //跳转到问卷编辑页
+      }
+    }
+  )
+
+  // 删除
+  const [isDeletedState, setIsDeletedState] = useState(false)
+  const { loading: deleteLoading, run: deleteQuestion } = useRequest(
+    async () => await updateQuestionService(_id, { isDeleted: true }),
+    {
+      manual: true,
+      onSuccess() {
+        message.success('删除成功')
+        setIsDeletedState(true)
+      }
+    }
+  )
   function del() {
     confirm({
       title: '确定删除该问卷？',
       icon: <ExclamationCircleOutlined></ExclamationCircleOutlined>,
       okText: '确定',
       cancelText: '取消',
-      onOk: () => message.success('删除成功')
+      onOk: deleteQuestion
     })
   }
+
+  // 修改 标星
+  const [isStarState, setIsStarState] = useState(isStar)
+  const { loading: changeStarLoading, run: changeStar } = useRequest(
+    async () => {
+      await updateQuestionService(_id, { isStar: !isStarState })
+    },
+    {
+      manual: true,
+      onSuccess() {
+        setIsStarState(!isStarState) // 更新 state
+        message.success('已更新')
+      }
+    }
+  )
+
+  // 已经删除的问卷，不要再渲染卡片了
+  if (isDeletedState) return null
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -45,7 +90,9 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
             to={isPublished ? `/question/stat/${_id}` : `/question/edit/${_id}`}
           >
             <Space>
-              {isStar && <StarOutlined style={{ color: 'red' }}></StarOutlined>}
+              {isStarState && (
+                <StarOutlined style={{ color: 'red' }}></StarOutlined>
+              )}
               {title}
             </Space>
           </Link>
@@ -89,9 +136,10 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               icon={<StarOutlined></StarOutlined>}
               type="text"
               size="small"
-              onClick={() => nav(`/question/edit/${_id}`)}
+              onClick={changeStar}
+              disabled={changeStarLoading}
             >
-              {isStar ? '取消星标' : '星标'}
+              {isStarState ? '取消星标' : '星标'}
             </Button>
             <Popconfirm
               title="确定复制该问卷？"
@@ -103,6 +151,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
                 icon={<CopyOutlined></CopyOutlined>}
                 type="text"
                 size="small"
+                disabled={duplicateLoading}
               >
                 复制
               </Button>
@@ -112,6 +161,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               type="text"
               size="small"
               onClick={del}
+              disabled={deleteLoading}
             >
               删除
             </Button>
